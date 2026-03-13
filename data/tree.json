@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "title": "Florida Voting Documents Tool",
+    "description": "Find out what documents you need to vote in Florida under the new proof of citizenship law.",
+    "start": "q_real_id"
+  },
+  "nodes": {
+    "q_real_id": {
+      "type": "question",
+      "text": "Do you have a Florida REAL ID driver's license or state ID card?",
+      "hint": "A REAL ID has a gold star in the upper right corner of the card.",
+      "choices": [
+        { "label": "Yes", "next": "result_covered" },
+        { "label": "No",  "next": "q_has_fl_id" },
+        { "label": "I'm not sure", "next": "q_check_star" }
+      ]
+    },
+
+    "q_check_star": {
+      "type": "question",
+      "text": "Look at the upper right corner of your Florida license or ID. Is there a gold star?",
+      "choices": [
+        { "label": "Yes, there's a gold star", "next": "result_covered" },
+        { "label": "No gold star",              "next": "q_has_fl_id" },
+        { "label": "I don't have a Florida ID", "next": "q_has_passport" }
+      ]
+    },
+
+    "q_has_fl_id": {
+      "type": "question",
+      "text": "Do you have any other Florida driver's license or state ID (without the gold star)?",
+      "choices": [
+        { "label": "Yes", "next": "result_needs_docs" },
+        { "label": "No",  "next": "q_has_passport" }
+      ]
+    },
+
+    "q_has_passport": {
+      "type": "question",
+      "text": "Do you have a valid U.S. passport or passport card?",
+      "choices": [
+        { "label": "Yes", "next": "result_passport_ok" },
+        { "label": "No",  "next": "result_needs_id" }
+      ]
+    },
+
+    "result_covered": {
+      "type": "result",
+      "status": "clear",
+      "heading": "You're covered.",
+      "body": "Your Florida REAL ID satisfies the documentary proof of citizenship requirement. No additional documents needed to register or vote.",
+      "links": [],
+      "signup": {
+        "heading": "Want updates on Florida voting rights?",
+        "body": "Sign up to stay informed as this law takes effect in 2027.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-covered"
+      }
+    },
+
+    "result_passport_ok": {
+      "type": "result",
+      "status": "clear",
+      "heading": "Your passport works.",
+      "body": "A valid U.S. passport or passport card satisfies the documentary proof of citizenship requirement.",
+      "links": [],
+      "signup": {
+        "heading": "Stay informed on Florida voting rights.",
+        "body": "Sign up for updates from Common Cause.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-passport"
+      }
+    },
+
+    "result_needs_docs": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "You'll need to submit additional documents.",
+      "body": "Your current Florida ID isn't a REAL ID, so you'll need to provide proof of citizenship when you register or re-register to vote. The most common option is an original or certified birth certificate — or you can upgrade your ID to a REAL ID.",
+      "links": [
+        { "label": "Get a Florida REAL ID", "url": "https://www.flhsmv.gov/driver-licenses-id-cards/real-id/" },
+        { "label": "Order a Florida birth certificate", "url": "https://www.floridahealth.gov/certificates/" }
+      ],
+      "signup": {
+        "heading": "We can help you through the process.",
+        "body": "Sign up and we'll send you step-by-step guidance.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-needs-docs"
+      }
+    },
+
+    "result_needs_id": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "You'll need to get an ID and proof of citizenship.",
+      "body": "Without a qualifying ID or passport, you'll need to obtain documents before you can register to vote under the new law. The fastest path is usually getting a Florida REAL ID, which requires proof of citizenship (such as a birth certificate) — but then you only need to show the REAL ID to register.",
+      "links": [
+        { "label": "How to get a Florida REAL ID", "url": "https://www.flhsmv.gov/driver-licenses-id-cards/real-id/" },
+        { "label": "Order a Florida birth certificate", "url": "https://www.floridahealth.gov/certificates/" },
+        { "label": "Apply for a U.S. passport", "url": "https://travel.state.gov/content/travel/en/passports.html" }
+      ],
+      "signup": {
+        "heading": "Let us help — we'll walk you through it.",
+        "body": "Sign up and Common Cause will send you guidance on next steps.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-needs-id"
+      }
+    }
+  }
+}
