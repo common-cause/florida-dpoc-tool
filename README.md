@@ -8,7 +8,7 @@ Paste into a WordPress **Custom HTML** block on the target page:
 
 ```html
 <div id="cc-tool"></div>
-<script src="https://commoncause.github.io/florida-dpoc-tool/src/embed.js"></script>
+<script src="https://common-cause.github.io/florida-dpoc-tool/src/embed.js"></script>
 ```
 
 ## Local Development

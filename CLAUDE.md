@@ -88,7 +88,7 @@ Push to `main` — GitHub Actions auto-deploys to GitHub Pages.
 
 Embed URL after deployment:
 ```
-https://commoncause.github.io/florida-dpoc-tool/src/embed.js
+https://common-cause.github.io/florida-dpoc-tool/src/embed.js
 ```
 
 ## WordPress Embed Snippet
@@ -97,7 +97,7 @@ Paste this into a Gutenberg "Custom HTML" block on the target CC page:
 
 ```html
 <div id="cc-tool"></div>
-<script src="https://commoncause.github.io/florida-dpoc-tool/src/embed.js"></script>
+<script src="https://common-cause.github.io/florida-dpoc-tool/src/embed.js"></script>
 ```
 
 No other changes needed. Updates to `main` go live automatically on every page using the embed.
