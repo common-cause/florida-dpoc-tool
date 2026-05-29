@@ -9,7 +9,7 @@ Hosted on GitHub Pages, embedded on WordPress pages via a two-line snippet.
 
 ## Key Files
 
-- `index.html` — local dev preview (simulates a CC page; not deployed as a standalone page)
+- `index.html` — preview/host-page simulation. Also deployed at the Pages root (`https://common-cause.github.io/florida-dpoc-tool/`) since the workflow uploads the whole repo. Use it as the FL-team staging URL until the embed is on the real WordPress page.
 - `src/embed.js` — widget entry point; finds the `#cc-tool` div and renders the tool
 - `src/embed.css` — all styles, namespaced under `.cc-tool` to avoid host page collisions
 - `data/tree.json` — decision tree content; edit this to update the tool without touching code
@@ -38,14 +38,24 @@ All tool content lives in `data/tree.json`. Schema reference:
 ```json
 {
   "type": "question",
+  "topic": "Short label (e.g. 'FL ID')",
   "text": "The question text",
   "hint": "Optional clarifying subtext",
   "choices": [
     { "label": "Yes", "next": "some_node_id" },
-    { "label": "No",  "next": "other_node_id" }
+    { "label": "Original or certified copy of birth certificate",
+      "summary": "Birth cert",
+      "next": "other_node_id" }
   ]
 }
 ```
+
+`topic` and `summary` are optional. They feed the breadcrumb trail of answered
+questions that renders above the current question — capsule format is
+`{topic}: {summary}`, e.g. `FL ID: Yes › REAL ID: No`. If `topic` is missing,
+the chip falls back to the question text; if `summary` is missing, it falls back
+to the choice's `label`. Add them anywhere the long-form text would be too verbose
+in a chip. Each chip is clickable and rewinds the user to that step.
 
 **`result`** — terminal node with outcome content and an optional signup:
 ```json
@@ -66,7 +76,8 @@ All tool content lives in `data/tree.json`. Schema reference:
 }
 ```
 
-`status` values: `clear` (green), `action_required` (orange), `ineligible` (red).
+`status` values: `clear` (green), `action_required` (orange), `ineligible` (red),
+`under_construction` (yellow diagonal stripes — for placeholder branches awaiting content).
 `signup` is optional — omit the key entirely to show no signup on that result.
 `an_tag` populates a hidden field in the AN form so signups are segmented by path.
 

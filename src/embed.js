@@ -3,7 +3,7 @@
  *
  * Usage: drop these two lines into a WordPress Custom HTML block:
  *   <div id="cc-tool"></div>
- *   <script src="https://commoncause.github.io/{repo}/src/embed.js"></script>
+ *   <script src="https://common-cause.github.io/{repo}/src/embed.js"></script>
  *
  * The script finds the #cc-tool div, loads data/tree.json relative to itself,
  * and renders the decision tree. No dependencies, no build step.
@@ -62,6 +62,8 @@
   function initTool(tree) {
     var meta = tree.meta || {};
     var nodes = tree.nodes || {};
+    // Each history entry is { nodeId, choiceIndex } — choiceIndex points into the
+    // question node's `choices` array, so we can rebuild the breadcrumb trail.
     var history = [];
     var current = meta.start;
 
@@ -72,6 +74,10 @@
         var h = el("h2", "cc-tool__title");
         h.textContent = meta.title;
         mount.appendChild(h);
+      }
+
+      if (history.length) {
+        mount.appendChild(renderTrail());
       }
 
       var node = nodes[current];
@@ -112,13 +118,13 @@
       }
 
       var choices = el("div", "cc-tool__choices");
-      (node.choices || []).forEach(function (choice) {
+      (node.choices || []).forEach(function (choice, idx) {
         var btn = document.createElement("button");
         btn.className = "cc-tool__choice";
         btn.type = "button";
         btn.textContent = choice.label;
         btn.addEventListener("click", function () {
-          history.push(current);
+          history.push({ nodeId: current, choiceIndex: idx });
           current = choice.next;
           render();
         });
@@ -205,11 +211,62 @@
       btn.textContent = "\u2190 Back";
       btn.addEventListener("click", function () {
         if (history.length) {
-          current = history.pop();
+          var prev = history.pop();
+          current = prev.nodeId;
           render();
         }
       });
       return btn;
+    }
+
+    function renderTrail() {
+      var nav = document.createElement("nav");
+      nav.className = "cc-tool__trail";
+      nav.setAttribute("aria-label", "Steps so far");
+
+      var ol = el("ol", "cc-tool__trail-list");
+
+      history.forEach(function (step, idx) {
+        var qNode = nodes[step.nodeId];
+        if (!qNode || qNode.type !== "question") return;
+        var choice = (qNode.choices || [])[step.choiceIndex];
+        if (!choice) return;
+
+        var topic = qNode.topic || qNode.text || "";
+        var summary = choice.summary || choice.label || "";
+
+        var li = el("li", "cc-tool__trail-item");
+
+        var chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "cc-tool__trail-chip";
+        chip.setAttribute("aria-label",
+          "Go back to: " + topic + " \u2014 answered " + summary);
+
+        var topicEl = el("span", "cc-tool__trail-topic");
+        topicEl.textContent = topic;
+        chip.appendChild(topicEl);
+
+        var sepEl = el("span", "cc-tool__trail-sep");
+        sepEl.textContent = ": ";
+        chip.appendChild(sepEl);
+
+        var answerEl = el("span", "cc-tool__trail-answer");
+        answerEl.textContent = summary;
+        chip.appendChild(answerEl);
+
+        chip.addEventListener("click", function () {
+          current = step.nodeId;
+          history = history.slice(0, idx);
+          render();
+        });
+
+        li.appendChild(chip);
+        ol.appendChild(li);
+      });
+
+      nav.appendChild(ol);
+      return nav;
     }
 
     // Kick off

@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Florida DPOC Tool — Local Dev</title>
+  <title>Florida DPOC Tool — Preview</title>
   <style>
     /*
-     * Minimal simulation of a CC WordPress page environment for local dev.
-     * This file is NOT deployed — it only exists to let you test the embed
-     * in a realistic host-page context (inherited fonts, colors, max-width).
+     * Simulates a CC page environment so the embed renders against
+     * inherited fonts, colors, and a reasonable max-width.
      */
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -20,29 +19,38 @@
       background: #fff;
     }
     h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .preview-banner {
+      background: #fff8d6;
+      border: 1px solid #e0c870;
+      border-left: 4px solid #b88a00;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      color: #5a4500;
+    }
+    .preview-banner strong { color: #3d2f00; }
     .page-intro { color: #555; margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1.5rem; }
     .embed-zone { margin: 2rem 0; }
-    .dev-note { font-size: 0.8rem; color: #999; margin-top: 3rem; border-top: 1px solid #eee; padding-top: 1rem; }
   </style>
 </head>
 <body>
+
+  <div class="preview-banner" role="note">
+    <strong>Preview — under review.</strong>
+    This is a draft of the Florida DPOC voter tool, prepared for review by Common Cause Florida staff.
+    Content reflects the program team's process map; some branches (flagged in yellow as <em>Under construction</em>) are still being developed.
+    Linked resources are placeholders pending final URLs.
+  </div>
 
   <h1>Florida DPOC Tool</h1>
   <p class="page-intro">Interactive decision tree helping Florida voters determine what documentary proof of citizenship they need to vote under the 2026 DPOC law.</p>
 
   <div class="embed-zone">
-    <!-- ============================================================
-         This is the embed snippet that goes into WordPress.
-         In production, replace src/embed.js with the GitHub Pages URL.
-         ============================================================ -->
+    <!-- The embed snippet that will go into WordPress in production. -->
     <div id="cc-tool"></div>
     <script src="src/embed.js"></script>
   </div>
-
-  <p class="dev-note">
-    Local dev preview — not a deployed page.
-    Run <code>python -m http.server 8080</code> to avoid CORS issues with tree.json.
-  </p>
 
 </body>
 </html>

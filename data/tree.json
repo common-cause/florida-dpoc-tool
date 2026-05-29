@@ -1,110 +1,434 @@
 {
   "meta": {
     "title": "Florida Voting Documents Tool",
-    "description": "Find out what documents you need to vote in Florida under the new proof of citizenship law.",
-    "start": "q_real_id"
+    "description": "Find out what documents you may need to vote in Florida under HB991 (the 2026 documentary proof of citizenship law).",
+    "start": "q_has_fl_id"
   },
   "nodes": {
-    "q_real_id": {
-      "type": "question",
-      "text": "Do you have a Florida REAL ID driver's license or state ID card?",
-      "hint": "A REAL ID has a gold star in the upper right corner of the card.",
-      "choices": [
-        { "label": "Yes", "next": "result_covered" },
-        { "label": "No",  "next": "q_has_fl_id" },
-        { "label": "I'm not sure", "next": "q_check_star" }
-      ]
-    },
-
-    "q_check_star": {
-      "type": "question",
-      "text": "Look at the upper right corner of your Florida license or ID. Is there a gold star?",
-      "choices": [
-        { "label": "Yes, there's a gold star", "next": "result_covered" },
-        { "label": "No gold star",              "next": "q_has_fl_id" },
-        { "label": "I don't have a Florida ID", "next": "q_has_passport" }
-      ]
-    },
-
     "q_has_fl_id": {
       "type": "question",
-      "text": "Do you have any other Florida driver's license or state ID (without the gold star)?",
+      "topic": "FL ID",
+      "text": "Do you have a Florida driver's license or state ID card?",
       "choices": [
-        { "label": "Yes", "next": "result_needs_docs" },
-        { "label": "No",  "next": "q_has_passport" }
+        { "label": "Yes", "next": "q_real_id" },
+        { "label": "No",  "next": "result_no_fl_id" }
       ]
     },
 
-    "q_has_passport": {
+    "q_real_id": {
       "type": "question",
-      "text": "Do you have a valid U.S. passport or passport card?",
+      "topic": "REAL ID",
+      "text": "Does your Florida license or ID have a gold star in the upper right corner?",
+      "hint": "The gold star indicates a REAL ID.",
       "choices": [
-        { "label": "Yes", "next": "result_passport_ok" },
-        { "label": "No",  "next": "result_needs_id" }
+        { "label": "Yes", "next": "q_naturalized_before_id" },
+        { "label": "No",  "next": "q_willing_real_id" }
       ]
     },
 
-    "result_covered": {
+    "q_naturalized_before_id": {
+      "type": "question",
+      "topic": "Naturalized before ID?",
+      "text": "Are you a naturalized U.S. citizen who obtained your Florida driver's license or ID before becoming a U.S. citizen?",
+      "choices": [
+        { "label": "Yes", "next": "result_naturalized_pre_id" },
+        { "label": "No",  "next": "q_used_id_to_register" }
+      ]
+    },
+
+    "result_naturalized_pre_id": {
       "type": "result",
-      "status": "clear",
-      "heading": "You're covered.",
-      "body": "Your Florida REAL ID satisfies the documentary proof of citizenship requirement. No additional documents needed to register or vote.",
-      "links": [],
+      "status": "action_required",
+      "heading": "Update your DHSMV record.",
+      "body": "A law passed in 2025 requires all naturalized citizens to update their Florida DL/ID record to include documentation of their naturalization. Use the link below to learn how. When updating your DL/ID record, be sure to select the option to update your voter registration as well — that way the necessary evidence of citizenship is reflected in your voter file.",
+      "links": [
+        { "label": "DHSMV — updating your record after naturalization (TODO: confirm URL)", "url": "https://www.flhsmv.gov/" }
+      ],
       "signup": {
-        "heading": "Want updates on Florida voting rights?",
-        "body": "Sign up to stay informed as this law takes effect in 2027.",
+        "heading": "Want help with this?",
+        "body": "Sign up and Common Cause will send guidance.",
         "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
-        "an_tag": "fl-dpoc-covered"
+        "an_tag": "fl-dpoc-naturalized-update"
       }
     },
 
-    "result_passport_ok": {
+    "q_used_id_to_register": {
+      "type": "question",
+      "topic": "Used DL/ID to register?",
+      "text": "Did you use your Florida driver's license or ID when you registered to vote?",
+      "choices": [
+        { "label": "Yes",              "next": "result_real_id_registered" },
+        { "label": "No",               "next": "result_real_id_not_registered" },
+        { "label": "I don't remember", "summary": "Unsure", "next": "result_real_id_not_registered" }
+      ]
+    },
+
+    "result_real_id_registered": {
       "type": "result",
       "status": "clear",
-      "heading": "Your passport works.",
-      "body": "A valid U.S. passport or passport card satisfies the documentary proof of citizenship requirement.",
-      "links": [],
+      "heading": "You're most likely all set.",
+      "body": "Your voter record most likely already contains the necessary evidence of citizenship and you should not have to take any additional steps. We recommend you check your registration to make sure your name and address are up to date.",
+      "links": [
+        { "label": "Check your registration at RegisterToVoteFlorida.gov", "url": "https://registertovoteflorida.gov/" }
+      ],
       "signup": {
-        "heading": "Stay informed on Florida voting rights.",
+        "heading": "Stay informed.",
+        "body": "Sign up for updates from Common Cause on Florida voting rights.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-real-id-registered"
+      }
+    },
+
+    "result_real_id_not_registered": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "Update your voter record to include your Florida DL/ID number.",
+      "body": "You can do this in any of four ways: (1) call your county Supervisor of Elections, (2) go to RegisterToVoteFlorida.gov and request a new voter information card (enter your FL DL/ID number when requesting), (3) submit a paper voter registration application, or (4) visit a county SOE office. You should also make sure your name and address are up to date.",
+      "links": [
+        { "label": "RegisterToVoteFlorida.gov",                                       "url": "https://registertovoteflorida.gov/" },
+        { "label": "Paper voter registration application (TODO: confirm URL)",        "url": "https://dos.fl.gov/elections/" },
+        { "label": "Find your county Supervisor of Elections (TODO: confirm URL)",    "url": "https://dos.fl.gov/elections/for-voters/county-supervisor-of-elections-offices/" }
+      ],
+      "signup": {
+        "heading": "We can help.",
+        "body": "Sign up and Common Cause will send guidance.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-update-voter-record"
+      }
+    },
+
+    "q_willing_real_id": {
+      "type": "question",
+      "topic": "Willing to get REAL ID?",
+      "text": "Are you willing and able to get a Florida REAL ID driver's license or ID?",
+      "choices": [
+        { "label": "Yes",          "next": "result_get_real_id" },
+        { "label": "No",           "next": "q_has_citizenship_docs" },
+        { "label": "I don't know", "summary": "Unsure", "next": "result_check_real_id_eligibility" }
+      ]
+    },
+
+    "result_get_real_id": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "Start the process of getting a REAL ID.",
+      "body": "We recommend you begin the process of obtaining an updated FL DL/ID from the DHSMV. When you are offered the option to register to vote or update your voter registration record, select \"yes\" — the necessary evidence of citizenship will then be reflected in your voter file.",
+      "links": [
+        { "label": "DHSMV — how to get a REAL ID (TODO: confirm URL)", "url": "https://www.flhsmv.gov/driver-licenses-id-cards/real-id/" }
+      ],
+      "signup": {
+        "heading": "Want help?",
+        "body": "Sign up and Common Cause will walk you through it.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-get-real-id"
+      }
+    },
+
+    "result_check_real_id_eligibility": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "Check whether you can get a REAL ID, then come back.",
+      "body": "Use the link below to see if you're able to get a Florida REAL ID, then come back here and choose the option that best fits your situation. If you need help obtaining a FL DL/ID, contact Vote Riders.",
+      "links": [
+        { "label": "DHSMV — how to get a REAL ID (TODO: confirm URL)", "url": "https://www.flhsmv.gov/driver-licenses-id-cards/real-id/" },
+        { "label": "Vote Riders (ID assistance)",                            "url": "https://www.voteriders.org/" }
+      ]
+    },
+
+    "q_has_citizenship_docs": {
+      "type": "question",
+      "topic": "Documents",
+      "text": "Do you have any of the following documents?",
+      "choices": [
+        { "label": "Valid U.S. passport",                              "summary": "Passport",            "next": "result_passport_meets" },
+        { "label": "Original or certified copy of birth certificate", "summary": "Birth cert",          "next": "q_name_matches_birth_cert" },
+        { "label": "Naturalization certificate",                      "summary": "Naturalization cert", "next": "q_name_matches_naturalization" },
+        { "label": "None of these",                                   "summary": "None",                "next": "q_citizenship_type" }
+      ]
+    },
+
+    "result_passport_meets": {
+      "type": "result",
+      "status": "clear",
+      "heading": "Your passport meets the citizenship requirement.",
+      "body": "You may be contacted by your county Supervisor of Elections requesting evidence of your citizenship. If you are, your valid passport meets the requirement. Check your registration to make sure your name and address are up to date. Respond promptly to any mail from your county SOE — and if you receive mail and are uncertain whether it's authentic, call your county SOE.",
+      "links": [
+        { "label": "RegisterToVoteFlorida.gov", "url": "https://registertovoteflorida.gov/" }
+      ],
+      "signup": {
+        "heading": "Stay informed.",
         "body": "Sign up for updates from Common Cause.",
         "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
         "an_tag": "fl-dpoc-passport"
       }
     },
 
-    "result_needs_docs": {
+    "q_name_matches_birth_cert": {
+      "type": "question",
+      "topic": "Name matches birth cert?",
+      "text": "Is your current legal name the same as the name on your birth certificate?",
+      "choices": [
+        { "label": "Yes", "next": "result_birth_cert_meets" },
+        { "label": "No",  "next": "result_birth_cert_name_change" }
+      ]
+    },
+
+    "result_birth_cert_meets": {
       "type": "result",
-      "status": "action_required",
-      "heading": "You'll need to submit additional documents.",
-      "body": "Your current Florida ID isn't a REAL ID, so you'll need to provide proof of citizenship when you register or re-register to vote. The most common option is an original or certified birth certificate — or you can upgrade your ID to a REAL ID.",
+      "status": "clear",
+      "heading": "Your birth certificate meets the citizenship requirement.",
+      "body": "You may be contacted by your county Supervisor of Elections requesting evidence of your citizenship. If you are, your birth certificate should meet the requirement. Check your registration to make sure your name and address are up to date, and respond promptly to any mail from your county SOE.",
       "links": [
-        { "label": "Get a Florida REAL ID", "url": "https://www.flhsmv.gov/driver-licenses-id-cards/real-id/" },
-        { "label": "Order a Florida birth certificate", "url": "https://www.floridahealth.gov/certificates/" }
+        { "label": "RegisterToVoteFlorida.gov", "url": "https://registertovoteflorida.gov/" }
       ],
       "signup": {
-        "heading": "We can help you through the process.",
-        "body": "Sign up and we'll send you step-by-step guidance.",
+        "heading": "Stay informed.",
+        "body": "Sign up for updates.",
         "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
-        "an_tag": "fl-dpoc-needs-docs"
+        "an_tag": "fl-dpoc-birth-cert"
       }
     },
 
-    "result_needs_id": {
+    "result_birth_cert_name_change": {
       "type": "result",
       "status": "action_required",
-      "heading": "You'll need to get an ID and proof of citizenship.",
-      "body": "Without a qualifying ID or passport, you'll need to obtain documents before you can register to vote under the new law. The fastest path is usually getting a Florida REAL ID, which requires proof of citizenship (such as a birth certificate) — but then you only need to show the REAL ID to register.",
+      "heading": "You'll need your birth certificate plus name-change documentation.",
+      "body": "If your county Supervisor of Elections contacts you requesting evidence of your citizenship, you'll need to provide your birth certificate AND documentation linking your current name to the name on your birth certificate. This can include original or certified copies of marriage certificate(s), divorce decree(s), or court order. If you don't have these documents, the links below can help you obtain replacements. If you need assistance, contact Vote Riders.",
       "links": [
-        { "label": "How to get a Florida REAL ID", "url": "https://www.flhsmv.gov/driver-licenses-id-cards/real-id/" },
-        { "label": "Order a Florida birth certificate", "url": "https://www.floridahealth.gov/certificates/" },
-        { "label": "Apply for a U.S. passport", "url": "https://travel.state.gov/content/travel/en/passports.html" }
+        { "label": "Marriage certificate — state/international links (TODO)", "url": "https://www.commoncause.org/" },
+        { "label": "Divorce decree — state/international links (TODO)",      "url": "https://www.commoncause.org/" },
+        { "label": "Court order — state/international links (TODO)",         "url": "https://www.commoncause.org/" },
+        { "label": "Vote Riders (document assistance)",                            "url": "https://www.voteriders.org/" },
+        { "label": "RegisterToVoteFlorida.gov",                                    "url": "https://registertovoteflorida.gov/" }
       ],
       "signup": {
-        "heading": "Let us help — we'll walk you through it.",
-        "body": "Sign up and Common Cause will send you guidance on next steps.",
+        "heading": "We can help you gather what you need.",
+        "body": "Sign up and Common Cause will send guidance.",
         "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
-        "an_tag": "fl-dpoc-needs-id"
+        "an_tag": "fl-dpoc-birth-cert-name-change"
       }
+    },
+
+    "q_name_matches_naturalization": {
+      "type": "question",
+      "topic": "Name matches naturalization?",
+      "text": "Is your current legal name the same as the name on your naturalization certificate?",
+      "choices": [
+        { "label": "Yes", "next": "result_naturalization_meets" },
+        { "label": "No",  "next": "result_naturalization_name_change" }
+      ]
+    },
+
+    "result_naturalization_meets": {
+      "type": "result",
+      "status": "clear",
+      "heading": "Your naturalization certificate meets the citizenship requirement.",
+      "body": "You may be contacted by your county Supervisor of Elections requesting evidence of your citizenship. If you are, your naturalization certificate should meet the requirement. Check your registration to make sure your name and address are up to date, and respond promptly to any mail from your county SOE.",
+      "links": [
+        { "label": "RegisterToVoteFlorida.gov", "url": "https://registertovoteflorida.gov/" }
+      ],
+      "signup": {
+        "heading": "Stay informed.",
+        "body": "Sign up for updates.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-naturalization"
+      }
+    },
+
+    "result_naturalization_name_change": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "You'll need your naturalization certificate plus name-change documentation.",
+      "body": "If your county Supervisor of Elections contacts you requesting evidence of your citizenship, you'll need to provide your naturalization certificate AND documentation linking your current name to the name on the certificate. This can include marriage certificate(s), divorce decree(s), or court order. If you don't have these documents, the links below can help you obtain replacements. For assistance, contact Vote Riders.",
+      "links": [
+        { "label": "Marriage certificate — state/international links (TODO)", "url": "https://www.commoncause.org/" },
+        { "label": "Divorce decree — state/international links (TODO)",      "url": "https://www.commoncause.org/" },
+        { "label": "Court order — state/international links (TODO)",         "url": "https://www.commoncause.org/" },
+        { "label": "Vote Riders (document assistance)",                            "url": "https://www.voteriders.org/" },
+        { "label": "RegisterToVoteFlorida.gov",                                    "url": "https://registertovoteflorida.gov/" }
+      ],
+      "signup": {
+        "heading": "We can help.",
+        "body": "Sign up for guidance.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-naturalization-name-change"
+      }
+    },
+
+    "q_citizenship_type": {
+      "type": "question",
+      "topic": "Citizenship",
+      "text": "Please select the option that best describes you.",
+      "choices": [
+        { "label": "I was born in the U.S.",                                                   "summary": "Born in U.S.",  "next": "q_name_matches_birth_us" },
+        { "label": "I was born to U.S. parents outside the U.S.",                              "summary": "Born abroad",   "next": "q_name_matches_birth_abroad" },
+        { "label": "I am a naturalized U.S. citizen",                                          "summary": "Naturalized",   "next": "q_name_matches_naturalization_obtain" },
+        { "label": "I am a derived U.S. citizen (my parents naturalized before I turned 18)", "summary": "Derived",       "next": "result_derived_citizen" }
+      ]
+    },
+
+    "q_name_matches_birth_us": {
+      "type": "question",
+      "topic": "Name matches birth?",
+      "text": "Is your current legal name the same as your name when you were born?",
+      "choices": [
+        { "label": "Yes", "next": "result_obtain_birth_cert_us" },
+        { "label": "No",  "next": "result_obtain_birth_cert_us_name" }
+      ]
+    },
+
+    "result_obtain_birth_cert_us": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "Obtain a copy of your birth certificate.",
+      "body": "If your county Supervisor of Elections contacts you requesting evidence of your citizenship, your birth certificate should meet the requirement. Use the links below to obtain a copy, depending on the state you were born in. For assistance, contact Vote Riders.",
+      "links": [
+        { "label": "State birth certificate links (TODO)", "url": "https://www.commoncause.org/" },
+        { "label": "Vote Riders (document assistance)",   "url": "https://www.voteriders.org/" },
+        { "label": "RegisterToVoteFlorida.gov",            "url": "https://registertovoteflorida.gov/" }
+      ],
+      "signup": {
+        "heading": "We can help.",
+        "body": "Sign up for guidance.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-obtain-birth-cert"
+      }
+    },
+
+    "result_obtain_birth_cert_us_name": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "Obtain your birth certificate and name-change documentation.",
+      "body": "If your county Supervisor of Elections contacts you requesting evidence of your citizenship, you'll need to provide your birth certificate AND documentation linking your current name to your name at birth. This can include marriage certificate(s), divorce decree(s), or court order. Use the links below to obtain copies. For assistance, contact Vote Riders.",
+      "links": [
+        { "label": "State birth certificate links (TODO)",                        "url": "https://www.commoncause.org/" },
+        { "label": "Marriage certificate — state/international links (TODO)", "url": "https://www.commoncause.org/" },
+        { "label": "Divorce decree — state/international links (TODO)",      "url": "https://www.commoncause.org/" },
+        { "label": "Court order — state/international links (TODO)",         "url": "https://www.commoncause.org/" },
+        { "label": "Vote Riders (document assistance)",                            "url": "https://www.voteriders.org/" }
+      ],
+      "signup": {
+        "heading": "We can help.",
+        "body": "Sign up for guidance.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-obtain-birth-cert-name"
+      }
+    },
+
+    "q_name_matches_birth_abroad": {
+      "type": "question",
+      "topic": "Name matches birth?",
+      "text": "Is your current legal name the same as your name when you were born?",
+      "choices": [
+        { "label": "Yes", "next": "result_obtain_birth_cert_abroad" },
+        { "label": "No",  "next": "result_obtain_birth_cert_abroad_name" }
+      ]
+    },
+
+    "result_obtain_birth_cert_abroad": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "Obtain a replacement birth certificate.",
+      "body": "If your county Supervisor of Elections contacts you requesting evidence of your citizenship, your birth certificate should meet the requirement. Use the link below for information on how to obtain a replacement birth certificate if you were born to U.S. parents abroad. For assistance, contact Vote Riders.",
+      "links": [
+        { "label": "Replacement birth certificate (born to U.S. parents abroad) — TODO", "url": "https://travel.state.gov/" },
+        { "label": "Vote Riders (document assistance)",                                        "url": "https://www.voteriders.org/" },
+        { "label": "RegisterToVoteFlorida.gov",                                                 "url": "https://registertovoteflorida.gov/" }
+      ],
+      "signup": {
+        "heading": "We can help.",
+        "body": "Sign up for guidance.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-obtain-birth-cert-abroad"
+      }
+    },
+
+    "result_obtain_birth_cert_abroad_name": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "Obtain your birth certificate and name-change documentation.",
+      "body": "If your county Supervisor of Elections contacts you requesting evidence of your citizenship, you'll need to provide your birth certificate AND documentation linking your current name to your name at birth. This can include marriage certificate(s), divorce decree(s), or court order. Use the links below to obtain copies. For assistance, contact Vote Riders.",
+      "links": [
+        { "label": "Replacement birth certificate (born to U.S. parents abroad) — TODO", "url": "https://travel.state.gov/" },
+        { "label": "Marriage certificate — state/international links (TODO)",             "url": "https://www.commoncause.org/" },
+        { "label": "Divorce decree — state/international links (TODO)",                  "url": "https://www.commoncause.org/" },
+        { "label": "Court order — state/international links (TODO)",                     "url": "https://www.commoncause.org/" },
+        { "label": "Vote Riders (document assistance)",                                        "url": "https://www.voteriders.org/" }
+      ],
+      "signup": {
+        "heading": "We can help.",
+        "body": "Sign up for guidance.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-obtain-birth-cert-abroad-name"
+      }
+    },
+
+    "q_name_matches_naturalization_obtain": {
+      "type": "question",
+      "topic": "Name matches naturalization?",
+      "text": "Is your current legal name the same as your name when you were naturalized?",
+      "choices": [
+        { "label": "Yes", "next": "result_obtain_naturalization" },
+        { "label": "No",  "next": "result_obtain_naturalization_name" }
+      ]
+    },
+
+    "result_obtain_naturalization": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "Obtain a replacement naturalization certificate.",
+      "body": "If your county Supervisor of Elections contacts you requesting evidence of your citizenship, your naturalization certificate should meet the requirement. Use the link below for information on how to obtain a replacement. For assistance, contact Vote Riders.",
+      "links": [
+        { "label": "Replacement naturalization certificate (USCIS) — TODO confirm URL", "url": "https://www.uscis.gov/" },
+        { "label": "Vote Riders (document assistance)",                                       "url": "https://www.voteriders.org/" },
+        { "label": "RegisterToVoteFlorida.gov",                                                "url": "https://registertovoteflorida.gov/" }
+      ],
+      "signup": {
+        "heading": "We can help.",
+        "body": "Sign up for guidance.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-obtain-naturalization"
+      }
+    },
+
+    "result_obtain_naturalization_name": {
+      "type": "result",
+      "status": "action_required",
+      "heading": "Obtain your naturalization certificate and name-change documentation.",
+      "body": "If your county Supervisor of Elections contacts you requesting evidence of your citizenship, you'll need to provide your naturalization certificate AND documentation linking your current name to the name on it. This can include marriage certificate(s), divorce decree(s), or court order. Use the links below to obtain copies. For assistance, contact Vote Riders.",
+      "links": [
+        { "label": "Replacement naturalization certificate (USCIS) — TODO",   "url": "https://www.uscis.gov/" },
+        { "label": "Marriage certificate — state/international links (TODO)", "url": "https://www.commoncause.org/" },
+        { "label": "Divorce decree — state/international links (TODO)",      "url": "https://www.commoncause.org/" },
+        { "label": "Court order — state/international links (TODO)",         "url": "https://www.commoncause.org/" },
+        { "label": "Vote Riders (document assistance)",                            "url": "https://www.voteriders.org/" }
+      ],
+      "signup": {
+        "heading": "We can help.",
+        "body": "Sign up for guidance.",
+        "embed_code": "<!-- ACTION NETWORK EMBED CODE HERE -->",
+        "an_tag": "fl-dpoc-obtain-naturalization-name"
+      }
+    },
+
+    "result_derived_citizen": {
+      "type": "result",
+      "status": "under_construction",
+      "heading": "Under construction — derived citizenship guidance.",
+      "body": "This branch is still being filled in by Florida program staff. Derived citizens (people who became U.S. citizens because a parent naturalized before they turned 18) often do not have a naturalization certificate of their own. Common Cause Florida is determining what documentation works in this case and what replacement options exist. Check back soon.",
+      "links": [
+        { "label": "Vote Riders (document assistance)", "url": "https://www.voteriders.org/" }
+      ]
+    },
+
+    "result_no_fl_id": {
+      "type": "result",
+      "status": "under_construction",
+      "heading": "Under construction — guidance for voters without a Florida ID.",
+      "body": "This branch is still being filled in. If you don't have a Florida driver's license or state ID, you may still be able to register and vote, but the path forward depends on what other documents you have and whether you're able to obtain a Florida ID. Common Cause Florida is finalizing the guidance for this case. Check back soon.",
+      "links": [
+        { "label": "Vote Riders (document and ID assistance)", "url": "https://www.voteriders.org/" }
+      ]
     }
   }
 }
