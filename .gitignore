@@ -4,3 +4,8 @@ tmp/
 .idea/
 *.iml
 inbox/
+
+# Survey/outreach spreadsheets contain respondent PII — never commit.
+# (Repo is PUBLIC and Pages publishes the whole tree.)
+data/*.ods
+data/*.xlsx
