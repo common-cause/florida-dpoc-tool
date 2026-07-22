@@ -13,6 +13,11 @@ Hosted on GitHub Pages, embedded on WordPress pages via a two-line snippet.
 - `src/embed.js` — widget entry point; finds the `#cc-tool` div and renders the tool
 - `src/embed.css` — all styles, namespaced under `.cc-tool` to avoid host page collisions
 - `data/tree.json` — decision tree content; edit this to update the tool without touching code
+- `data/FL DPOC Process Map*.xlsx`, `data/HB991 Outreach Responses*.ods` — source spreadsheets
+  from FL program staff (process map the tree was encoded from; outreach survey responses).
+  Reference material only — the tool never loads them. **Caution:** the Pages workflow uploads
+  the whole repo, so any file committed to this repo (including `data/`) is publicly
+  downloadable from the Pages site. Don't commit spreadsheets containing personal info.
 
 ## Local Development
 
@@ -79,7 +84,9 @@ in a chip. Each chip is clickable and rewinds the user to that step.
 `status` values: `clear` (green), `action_required` (orange), `ineligible` (red),
 `under_construction` (yellow diagonal stripes — for placeholder branches awaiting content).
 `signup` is optional — omit the key entirely to show no signup on that result.
-`an_tag` populates a hidden field in the AN form so signups are segmented by path.
+`an_tag` is reserved for segmenting signups by path, but is **not yet wired up** —
+`renderSignup()` in `embed.js` injects the embed code as-is and does not populate any
+hidden field. Implement that when real AN embed codes replace the placeholders.
 
 ## CSS Namespacing
 
@@ -95,7 +102,9 @@ that could bleed into the host page. Use `.cc-tool p`, `.cc-tool h2`, etc.
 
 ## Deploying
 
-Push to `main` — GitHub Actions auto-deploys to GitHub Pages.
+Push to `main` — GitHub Actions auto-deploys to GitHub Pages. The workflow uploads the
+**entire repo** (`path: "."` in `deploy.yml`), so every tracked file is served publicly
+from the Pages site, not just `src/` and `data/tree.json`.
 
 Embed URL after deployment:
 ```
@@ -112,3 +121,14 @@ Paste this into a Gutenberg "Custom HTML" block on the target CC page:
 ```
 
 No other changes needed. Updates to `main` go live automatically on every page using the embed.
+
+## PII / Data Handling
+
+Row-level PII (names, emails, phones, street addresses, gift amounts) **never gets
+committed to git** — repos here are org-visible via shared corpora and export pipelines.
+Any directory that will receive raw dumps or query results gets gitignored BEFORE the
+first file lands (allowlist known-clean file types; never enumerate known-bad files).
+Committed derivatives must be masked or aggregated; fabricate example rows in docs.
+Row-level people-data lives in access-controlled systems (BigQuery, ROI, Action Network,
+shared Sheets) — point at it, don't copy it. Full policy: knowledge library entry
+`pii-handling-policy` (`kl_get`).
