@@ -4,8 +4,13 @@ tmp/
 .idea/
 *.iml
 inbox/
+HANDOFF.md
 
-# Survey/outreach spreadsheets contain respondent PII — never commit.
-# (Repo is PUBLIC and Pages publishes the whole tree.)
-data/*.ods
-data/*.xlsx
+# data/ is ALLOWLISTED: only the tool's own input may be tracked. The survey
+# and process-map spreadsheets that also land here carry respondent PII, the
+# repo is PUBLIC, and Pages publishes the whole tree — so a new export in any
+# format (.csv is Google Forms' default) must be ignored before it exists,
+# not after someone notices it. The old *.ods/*.xlsx denylist already failed
+# once: an .xlsx was tracked before the rule landed and gitignore never untracks.
+data/*
+!data/tree.json
