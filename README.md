@@ -48,6 +48,8 @@ florida-dpoc-tool/
         └── deploy.yml      # Auto-deploys to GitHub Pages on push to main
 ```
 
-> **Caution:** the deploy workflow publishes the **whole repo** to GitHub Pages, so every
-> tracked file (including `data/` spreadsheets) is publicly downloadable. Never commit
-> files containing personal information.
+> **Caution:** this repo is **public**, so every tracked file is world-readable on GitHub
+> regardless of what Pages serves. Never commit files containing personal information.
+> The deploy workflow publishes an allowlist (`index.html`, `src/`, `data/tree.json`), not
+> the whole tree, and `data/` is gitignored except `tree.json` — two independent guards
+> for the spreadsheets that land there.

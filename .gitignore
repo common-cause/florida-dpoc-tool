@@ -14,3 +14,6 @@ HANDOFF.md
 # once: an .xlsx was tracked before the rule landed and gitignore never untracks.
 data/*
 !data/tree.json
+
+# Built by the Pages workflow (the published allowlist); never committed.
+_site/

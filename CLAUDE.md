@@ -9,15 +9,17 @@ Hosted on GitHub Pages, embedded on WordPress pages via a two-line snippet.
 
 ## Key Files
 
-- `index.html` — preview/host-page simulation. Also deployed at the Pages root (`https://common-cause.github.io/florida-dpoc-tool/`) since the workflow uploads the whole repo. Use it as the FL-team staging URL until the embed is on the real WordPress page.
+- `index.html` — preview/host-page simulation. Also deployed at the Pages root (`https://common-cause.github.io/florida-dpoc-tool/`) — it is on the workflow's publish allowlist. Use it as the FL-team staging URL until the embed is on the real WordPress page.
 - `src/embed.js` — widget entry point; finds the `#cc-tool` div and renders the tool
 - `src/embed.css` — all styles, namespaced under `.cc-tool` to avoid host page collisions
 - `data/tree.json` — decision tree content; edit this to update the tool without touching code
 - `data/FL DPOC Process Map*.xlsx`, `data/HB991 Outreach Responses*.ods` — source spreadsheets
   from FL program staff (process map the tree was encoded from; outreach survey responses).
-  Reference material only — the tool never loads them. **Caution:** the Pages workflow uploads
-  the whole repo, so any file committed to this repo (including `data/`) is publicly
-  downloadable from the Pages site. Don't commit spreadsheets containing personal info.
+  Reference material only — the tool never loads them. **Caution:** this repo is PUBLIC, so
+  anything committed is world-readable on GitHub. Two guards keep the spreadsheets out:
+  `data/` is gitignored except `tree.json` (allowlist, since 2026-09-18), and the Pages
+  workflow publishes only `index.html`, `src/` and `data/tree.json`. Don't commit
+  spreadsheets containing personal info, and don't widen either guard without reading this.
 
 ## Local Development
 
@@ -102,9 +104,12 @@ that could bleed into the host page. Use `.cc-tool p`, `.cc-tool h2`, etc.
 
 ## Deploying
 
-Push to `main` — GitHub Actions auto-deploys to GitHub Pages. The workflow uploads the
-**entire repo** (`path: "."` in `deploy.yml`), so every tracked file is served publicly
-from the Pages site, not just `src/` and `data/tree.json`.
+Push to `main` — GitHub Actions auto-deploys to GitHub Pages. The workflow assembles an
+**allowlist** into `_site/` (`index.html`, `src/embed.js`, `src/embed.css`, `data/tree.json`)
+and publishes that, not the checkout — a new file is not served until someone adds it to the
+`Assemble the site` step in `deploy.yml`. (Until 2026-09-18 it uploaded `path: "."`, the
+whole repo.) The repo itself is still public, so the gitignore is the guard for anything
+that must not be readable at all.
 
 Embed URL after deployment:
 ```
